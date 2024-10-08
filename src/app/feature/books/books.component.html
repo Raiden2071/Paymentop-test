@@ -4,7 +4,7 @@
             <p class="container-name">POP UP.</p>
         </div>
         <div class="cross-handler">
-            <button class="cancel-btn" (click)="closePopUp()"><img class="bin" src="assets/cross.svg" alt=""></button>
+            <button class="cancel-btn" (click)="closePopUp()"><img class="bin" src="assets/icons/cross.svg" alt=""></button>
         </div>
         <div class="popup-content">
             <div class="popup-image-handler">
@@ -20,8 +20,8 @@
             <p class="card-info">DESCRIPTION.: {{ poppedUpBook.description }}</p>
         </div>
         <div class="popup-buttons-handler">
-            <button class="card-btn" (click)="onDeleteBook(editableIndex)"><img src="assets/bin.svg" class="bin"></button>
-            <button class="card-btn" (click)="onEditBook(editableIndex)"><img src="assets/pencil.svg" class="pencil"></button>
+            <button class="card-btn" (click)="onDeleteBook(editableIndex)"><img src="assets/icons/bin.svg" class="bin"></button>
+            <button class="card-btn" (click)="onEditBook(editableIndex)"><img src="assets/icons/pencil.svg" class="pencil"></button>
         </div>
     </div>
     <div class="edit-container" *ngIf="isEdit">
@@ -29,7 +29,7 @@
             <p class="container-name">EDIT.</p>
         </div>
         <div class="cross-handler">
-            <button class="cancel-btn" (click)="cancelEditing()"><img class="bin" src="assets/cross.svg" alt=""></button>
+            <button class="cancel-btn" (click)="cancelEditing()"><img class="bin" src="assets/icons/cross.svg" alt=""></button>
         </div>
         <div class="form-handler">
             <form class="form" [formGroup]="editForm" (ngSubmit)="onSubmitEditBook()">
@@ -96,8 +96,8 @@
                     <p class="card-info">YEAR.: {{ item.year }}</p>
                 </div>
                 <div class="buttons-handler">
-                    <button class="card-btn" [disabled]="isEdit || isPoppedUp" (click)="onDeleteBook(i)"><img src="assets/bin.svg" class="bin"></button>
-                    <button class="card-btn" [disabled]="isEdit || isPoppedUp" (click)="onEditBook(i)"><img src="assets/pencil.svg" class="pencil"></button>
+                    <button class="card-btn" [disabled]="isEdit || isPoppedUp" (click)="onDeleteBook(i)"><img src="assets/icons/bin.svg" class="bin"></button>
+                    <button class="card-btn" [disabled]="isEdit || isPoppedUp" (click)="onEditBook(i)"><img src="assets/icons/pencil.svg" class="pencil"></button>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BooksService } from './shared/books.service';
-import { Book } from './shared/book.interface';
+import { BooksService } from './services/books.service';
+import { Book } from './models/book.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,7 +13,8 @@ import { CommonModule } from '@angular/common';
     CommonModule,
   ],
   templateUrl: './books.component.html',
-  styleUrl: './books.component.css'
+  styleUrl: './books.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BooksComponent implements OnInit{
 
