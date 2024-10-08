@@ -1,0 +1,286 @@
+.wrapper {
+    display: flex;
+    width: 100%;
+    padding: 30px;
+    gap: 70px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 620px;
+    border: 2px solid black;
+    border-radius:20px;
+}
+
+.edit-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    width: 400px;
+    height: 580px;
+    background-color: white;
+    z-index: 1000;
+    border-radius: 20px;
+    top: 100px;
+    left: 515px;
+}
+
+.popup-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    width: 600px;
+    height: 580px;
+    background-color: white;
+    z-index: 1000;
+    border-radius: 20px;
+    top: 100px;
+    left: 415px;
+}
+
+.popup-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.popup-image-handler {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    border: 2px solid black;
+    border-radius: 15px;
+}
+
+.popup-info-handler {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.popup-buttons-handler {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.popup-description-handler {
+    margin-left: 15px;
+}
+
+.popup-buttons-handler button {
+    padding: 30px;
+}
+
+.cancel-btn {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+.cross-handler {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 15px 0 0;
+}
+
+.when-edit {
+    opacity: 0.2;
+}
+
+.form-handler {
+    padding: 40px 0 0 43px;
+}
+
+.form-handler form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-container .form-handler {
+    padding: 0 0 0 43px;
+}
+
+.form label {
+    font-size: 20px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    padding: 10px 0 10px 0;
+}
+
+.form input {
+    height: 40px;
+    width: 300px;
+    border-radius: 10px;
+    border: 2px solid black;
+    font-size: 20px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    padding-left: 15px;
+}
+
+.form-btn {
+    width: 300px;
+    border-radius: 10px;
+    border: 2px solid black;
+    background-color: white;
+    padding: 10px;
+    margin-top: 40px;
+    font-size: 20px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    height: 620px;
+    border: 2px solid black;
+    border-radius: 20px;
+}
+
+.container-name {
+    font-size: 34px;
+    padding: 25px 30px 10px 30px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+}
+
+.name-handler {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border-bottom: 2px solid black;
+}
+
+.content .name-handler {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border: none;
+}
+
+.input-handler {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid;
+}
+
+.search-input {
+    height: 40px;
+    width: 500px;
+    border-radius: 10px;
+    border: 2px solid black;
+    font-size: 20px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    padding-left: 15px;
+}
+
+input {
+    transition: 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    transform: scale(1.04);
+    transition: 0.3s ease;
+}
+
+.cards-handler {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px 0 40px 43px;
+    width: 100%;
+    overflow: scroll;
+    gap: 30px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 320px;
+    border: 2px solid black;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: ease 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    transition: ease 0.3s;
+}
+
+button {
+    transition: ease 0.3s;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.04);
+    transition: ease 0.3s;
+}
+
+.photo-handler {
+    width: 100%;
+    border-bottom: 2px solid black;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-photo-name {
+    font-size: 20px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+}
+
+.card-info {
+    font-size: 15px;
+    padding: 0 0 0 10px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+}
+
+.info-handler {
+    margin-top: 10px;
+}
+
+.buttons-handler {
+    display: flex;
+    width: 100%;
+    padding: 0 10px 0 10px;
+    justify-content: space-between;
+}
+
+.card-btn {
+    padding: 10px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 15px;
+}
+
+.bin {
+    width: 25px;
+    height: 25px;
+}
+
+.pencil {
+    width: 25px;
+    height: 25px;
+}
