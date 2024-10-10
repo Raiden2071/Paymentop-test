@@ -1,120 +1,136 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal
+} from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BooksService } from './services/books.service';
-import { Book } from './models/book.model';
-import { CommonModule } from '@angular/common';
+import { Book, BooksDialogType } from './models/book.model';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { BooksDialogComponent } from './dialogs/books-dialog/books-dialog.component';
+import { NavbarComponent } from '@core/navbar/navbar.component';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { v4 as uuidv4 } from 'uuid';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-books',
   standalone: true,
   imports: [
-    FormsModule, 
-    ReactiveFormsModule, 
+    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatDialogModule,
+    NavbarComponent,
+    MatInput,
+    MatButton,
+    NgOptimizedImage,
   ],
   templateUrl: './books.component.html',
   styleUrl: './books.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooksComponent implements OnInit{
+export class BooksComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+  private books$: Observable<Book[]> = toObservable(this.booksService.books);
 
-  books: Book[] = [];
-  isEdit: boolean = false;
-  isPoppedUp: boolean = false;
-  poppedUpBook: Book = null;
-  editableIndex: number = 0;
-  filteredBooks: Book[] = [];
-  searchModel: string;
+  filteredBooks: WritableSignal<Book[]> = signal<Book[]>([]);
+  searchText: FormControl<string> = this.fb.control('')
 
-  bookForm: FormGroup = new FormGroup({
-    name: new FormControl({value: '', disabled: false}, Validators.required),
-    author: new FormControl({value: '', disabled: false}, Validators.required),
-    year: new FormControl({value: '', disabled: false}, Validators.required),
-    description: new FormControl({value: '', disabled: false}, Validators.required)
-  })
-
-  editForm: FormGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    author: new FormControl('', Validators.required),
-    year: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required)
-  })
+  readonly bookForm = this.fb.group({
+    image: [''],
+    name: [{ value: '', disabled: false }, Validators.required],
+    author: [{ value: '', disabled: false }, Validators.required],
+    year: [{ value: '', disabled: false }, Validators.required],
+    description: [{ value: '', disabled: false }, Validators.required]
+  });
 
   constructor(
-    private booksService: BooksService
-  ){}
+    private booksService: BooksService,
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
-    this.books = this.booksService.books;
-    this.filteredBooks = this.booksService.books;
+    this.filteredBooks.set(this.booksService.books());
+
+    this.initFormListeners();
   }
 
-  onAddBook(): void {
-    if(this.bookForm.value && this.bookForm.valid) {
-      this.booksService.addBook(this.bookForm.value);
-      this.books = this.booksService.books;
+  public openDialog(book: Book, dialogType: BooksDialogType): void {
+    this.dialog.open(BooksDialogComponent, {
+      data: {
+        book,
+        dialogType,
+      },
+      width: '500px',
+    });
+  }
+
+  public addBook(): void {
+    if (this.bookForm.valid) {
+      const newBook: Book = {
+        id: uuidv4(),
+        name: this.bookForm.get('name')?.value || '',
+        author: this.bookForm.get('author')?.value || '',
+        year: +this.bookForm.get('year')?.value || 0,
+        description: this.bookForm.get('description')?.value || '',
+        image: this.bookForm.get('image')?.value || '',
+      };
+
+      console.log('add book method', newBook);
+      this.booksService.addBook(newBook);
       this.bookForm.reset();
-    } else {
-      return;
     }
   }
 
-  onEditBook(i: number): void {
-    this.isEdit = true;
-    this.editableIndex = i;
-    this.editForm.setValue(this.books[i]);
-    this.bookForm.disable();
-  }
-
-  onSubmitEditBook(): void {
-    if(this.editForm.value && this.editForm.valid) {
-      this.booksService.editBook(this.editableIndex, this.editForm.value);
-      this.books = this.booksService.books;
-      this.isEdit = false;
-      this.bookForm.enable();
-      this.isPoppedUp = false;
-    } else {
-      return;
+  public onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.bookForm.patchValue({ image: file });
     }
   }
 
-  cancelEditing(): void {
-    this.isEdit = false;
-    this.isPoppedUp = false;
-    this.poppedUpBook = null;
-    this.editForm.reset();
-    this.bookForm.enable();
+  private initFormListeners(): void {
+    this.books$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.applyFilter();
+      });
+
+    this.searchText.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.applyFilter();
+      });
   }
 
-  onDeleteBook(i): void {
-    this.booksService.deleteBook(i);
-    this.books = this.booksService.books;
-    this.isPoppedUp = false;
-    this.poppedUpBook = null;
-    this.bookForm.enable();
-  }
+  private applyFilter(): void {
+    const books = this.booksService.books();
+    const searchText = this.searchText.value ? this.searchText.value.toLowerCase() : '';
 
-  activatePopUp(i): void{
-    this.isPoppedUp = true;
-    this.poppedUpBook = this.books[i];
-    this.editableIndex = i;
-    this.bookForm.disable();
-  }
-
-  closePopUp(): void {
-    this.isPoppedUp = false;
-    this.poppedUpBook = null;
-    this.bookForm.enable();
-  }
-
-  onSearch() {
-    if(this.searchModel) {
-      this.filteredBooks = this.books.filter( v => 
-        v.name.toLowerCase().includes(this.searchModel.toLowerCase())
-      )
+    if (searchText) {
+      const filtered = books.filter(book =>
+        book.name.toLowerCase().includes(searchText) ||
+        book.author.toLowerCase().includes(searchText)
+      );
+      this.filteredBooks.set(filtered);
     } else {
-      this.filteredBooks = this.books;
+      this.filteredBooks.set(books);
     }
   }
-
 }

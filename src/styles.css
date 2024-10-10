@@ -1,10 +1,12 @@
+@import "styles/variables/index.css";
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 html, body { height: 100vh; }
-body { 
+body {
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }

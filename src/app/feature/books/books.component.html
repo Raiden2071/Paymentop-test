@@ -1,105 +1,82 @@
 <div class="wrapper">
-    <div class="popup-container" *ngIf="isPoppedUp && !isEdit">
-        <div class="name-handler">
-            <p class="container-name">POP UP.</p>
-        </div>
-        <div class="cross-handler">
-            <button class="cancel-btn" (click)="closePopUp()"><img class="bin" src="assets/icons/cross.svg" alt=""></button>
-        </div>
-        <div class="popup-content">
-            <div class="popup-image-handler">
-                <p class="card-photo-name">IMAGE.</p>
-            </div>
-            <div class="popup-info-handler">
-                    <p class="card-info">NAME.: {{ poppedUpBook.name }}</p>
-                    <p class="card-info">AUTHOR.: {{ poppedUpBook.author }}</p>
-                    <p class="card-info">YEAR.: {{ poppedUpBook.year }}</p>
-            </div>
-        </div>
-        <div class="popup-description-handler">
-            <p class="card-info">DESCRIPTION.: {{ poppedUpBook.description }}</p>
-        </div>
-        <div class="popup-buttons-handler">
-            <button class="card-btn" (click)="onDeleteBook(editableIndex)"><img src="assets/icons/bin.svg" class="bin"></button>
-            <button class="card-btn" (click)="onEditBook(editableIndex)"><img src="assets/icons/pencil.svg" class="pencil"></button>
-        </div>
+  <div class="sidebar">
+
+
+    <div class="form-container">
+      <div class="section-header">
+        <p>Add Book</p>
+      </div>
+
+      <form class="form" [formGroup]="bookForm" (ngSubmit)="addBook()">
+        <mat-form-field appearance="outline">
+          <mat-label>NAME</mat-label>
+          <input matInput placeholder="Enter the book name" formControlName="name" required/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>AUTHOR</mat-label>
+          <input matInput formControlName="author" placeholder="Enter the author name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>YEAR</mat-label>
+          <input matInput formControlName="year" type="number" placeholder="Enter publication year">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>DESCRIPTION</mat-label>
+          <textarea matInput formControlName="description" placeholder="Enter description"></textarea>
+        </mat-form-field>
+
+        <input type="file" formControlName="image" (change)="onFileChange($event)" class="file-input" />
+
+        <button mat-raised-button color="primary" class="form-btn" type="submit">
+          Save
+        </button>
+      </form>
     </div>
-    <div class="edit-container" *ngIf="isEdit">
-        <div class="name-handler">
-            <p class="container-name">EDIT.</p>
-        </div>
-        <div class="cross-handler">
-            <button class="cancel-btn" (click)="cancelEditing()"><img class="bin" src="assets/icons/cross.svg" alt=""></button>
-        </div>
-        <div class="form-handler">
-            <form class="form" [formGroup]="editForm" (ngSubmit)="onSubmitEditBook()">
+  </div>
 
-                <label for="name">NAME.:</label>
-                <input formControlName="name" type="text" id="name" placeholder="NAME...">
-
-                <label for="author">AUTHOR.:</label>
-                <input formControlName="author" type="text" id="author" placeholder="AUTHOR...">
-
-                <label for="year">YEAR.:</label>
-                <input formControlName="year" type="text" id="year" placeholder="YEAR...">
-
-                <label for="description">DESCRIPTION.:</label>
-                <input formControlName="description" type="text" id="description" placeholder="DESCRIPTION...">
-
-                <button class="form-btn" type="submit">SUBMIT.</button>
-            </form>
-        </div>
+  <div class="content">
+    <div class="section-header">
+      <p class="container-name">LIST</p>
     </div>
-    <div class="sidebar" [ngClass]="{'when-edit': isEdit || isPoppedUp}">
-        <div class="name-handler">
-            <p class="container-name">FORM.</p>
-        </div>
-        <div class="form-handler">
-            <form class="form" [formGroup]="bookForm" (ngSubmit)="onAddBook()">
+    <mat-form-field class="input-handler">
+      <input
+        matInput
+        type="text"
+        [formControl]="searchText"
+        placeholder="Enter the card..."
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <hr>
 
-                <label for="name">NAME.:</label>
-                <input formControlName="name" type="text" id="name" placeholder="NAME...">
+    <div class="book-list">
+      @for (book of filteredBooks(); track book.name) {
+        <mat-card class="book-card">
+          <div class="img-block">
+            @if (book.image) {
+              <img mat-card-image class="card-image" [src]="book.image" alt="Book cover" width="300" height="300" priority>
+            } @else {
+              <p class="card-photo-name">NO IMAGE</p>
+            }
+          </div>
 
-                <label for="author">AUTHOR.:</label>
-                <input formControlName="author" type="text" id="author" placeholder="AUTHOR...">
+          <mat-card-content>
+            <p>{{ book.name }}</p>
+          </mat-card-content>
 
-                <label for="year">YEAR.:</label>
-                <input formControlName="year" type="text" id="year" placeholder="YEAR...">
-
-                <label for="description">DESCRIPTION.:</label>
-                <input formControlName="description" type="text" id="description" placeholder="DESCRIPTION...">
-
-                <button class="form-btn" [disabled]="isEdit" type="submit">SUBMIT.</button>
-            </form>
-        </div>
+          <mat-card-actions class="buttons-handler">
+            <button class="card-btn" (click)="openDialog(book, 'delete')">
+              <img ngSrc="assets/icons/bin.svg" class="bin" alt="delete" height="16" width="16">
+            </button>
+            <button class="card-btn" (click)="openDialog(book, 'edit')">
+              <img ngSrc="assets/icons/pencil.svg" class="pencil" alt="edit" height="16" width="16">
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
     </div>
-    <div class="content" [ngClass]="{'when-edit': isEdit|| isPoppedUp}">
-        <div class="name-handler">
-            <p class="container-name">LIST.</p>
-        </div>
-        <div class="input-handler">
-            <input 
-                class="search-input" 
-                type="text" 
-                [(ngModel)]="searchModel" 
-                placeholder="SEARCH..."
-                (input)="onSearch()">
-        </div>
-        <div class="cards-handler">
-            <div class="card" *ngFor="let item of filteredBooks; let i = index;" (click)="activatePopUp(i)">
-                <div class="photo-handler">
-                    <p class="card-photo-name">IMAGE.</p>
-                </div>
-                <div class="info-handler">
-                    <p class="card-info">NAME.: {{ item.name }}</p>
-                    <p class="card-info">AUTHOR.: {{ item.author }}</p>
-                    <p class="card-info">YEAR.: {{ item.year }}</p>
-                </div>
-                <div class="buttons-handler">
-                    <button class="card-btn" [disabled]="isEdit || isPoppedUp" (click)="onDeleteBook(i)"><img src="assets/icons/bin.svg" class="bin"></button>
-                    <button class="card-btn" [disabled]="isEdit || isPoppedUp" (click)="onEditBook(i)"><img src="assets/icons/pencil.svg" class="pencil"></button>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
