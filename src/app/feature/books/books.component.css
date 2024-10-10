@@ -37,6 +37,7 @@
 /*----*/
 
 .content {
+  width: 100vw;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;

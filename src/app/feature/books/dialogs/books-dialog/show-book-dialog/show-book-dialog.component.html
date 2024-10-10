@@ -1,0 +1,24 @@
+<h2 mat-dialog-title class="dialog-header">Book Dialog</h2>
+
+<mat-dialog-content class="dialog-content">
+    <div class="dialog-image">
+      @if (data.book.image) {
+        <img [src]="data.book.image" alt="dialog-image">
+      }
+      @else {
+        <p class="card-photo-name">NO IMAGE</p>
+      }
+    </div>
+    <div class="dialog-info">
+      <p class="card-info">NAME: {{ data.book.name }}</p>
+      <p class="card-info">AUTHOR: {{ data.book.author }}</p>
+      <p class="card-info">YEAR: {{ data.book.year }}</p>
+      <p class="card-info">Description: {{ data.book.description }}</p>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button color="primary" mat-dialog-close>
+    <mat-icon>favorite</mat-icon>
+    Close
+  </button>
+</mat-dialog-actions>

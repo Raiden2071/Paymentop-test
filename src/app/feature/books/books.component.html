@@ -1,7 +1,6 @@
 <div class="wrapper">
   <div class="sidebar">
 
-
     <div class="form-container">
       <div class="section-header">
         <p>Add Book</p>
@@ -54,7 +53,7 @@
 
     <div class="book-list">
       @for (book of filteredBooks(); track book.name) {
-        <mat-card class="book-card">
+        <mat-card class="book-card" (click)="openDialog(book, BOOKS_DIALOG_TYPES.SHOW)">
           <div class="img-block">
             @if (book.image) {
               <img mat-card-image class="card-image" [src]="book.image" alt="Book cover" width="300" height="300" priority>
@@ -68,10 +67,10 @@
           </mat-card-content>
 
           <mat-card-actions class="buttons-handler">
-            <button class="card-btn" (click)="openDialog(book, 'delete')">
+            <button class="card-btn" (click)="$event.stopPropagation(); openDialog(book, BOOKS_DIALOG_TYPES.DELETE)">
               <img ngSrc="assets/icons/bin.svg" class="bin" alt="delete" height="16" width="16">
             </button>
-            <button class="card-btn" (click)="openDialog(book, 'edit')">
+            <button class="card-btn" (click)="$event.stopPropagation();openDialog(book, BOOKS_DIALOG_TYPES.EDIT)">
               <img ngSrc="assets/icons/pencil.svg" class="pencil" alt="edit" height="16" width="16">
             </button>
           </mat-card-actions>

@@ -1,0 +1,49 @@
+.edit-dialog-header {
+  border-bottom: 1px solid var(--black);
+}
+
+.edit-dialog-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-dialog-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 1rem;
+  height: 200px;
+  min-width: 200px;
+  min-height: 200px;
+  border: 1px solid var(--black);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  img {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
+  }
+}
+.edit-dialog-image:hover {
+  transform: scale(1.05);
+}
+
+.edit-dialog-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.edit-dialog-form mat-form-field {
+  width: 100%;
+}
+
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: center;
+}

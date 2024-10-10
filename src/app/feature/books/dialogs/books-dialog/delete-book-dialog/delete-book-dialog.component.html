@@ -1,0 +1,17 @@
+<h2 mat-dialog-title class="dialog-header">Delete Book Dialog</h2>
+
+<mat-dialog-content>
+  <div class="dialog-content">
+    <p>Are you sure want to remove <strong>{{ data.book.name }}</strong>?</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button color="primary" mat-dialog-close>
+    <mat-icon>favorite</mat-icon>
+    Close
+  </button>
+  <button mat-flat-button color="primary" cdkFocusInitial mat-dialog-close (click)="deleteBook()">
+    <mat-icon>favorite</mat-icon>
+    Remove
+  </button>
+</mat-dialog-actions>

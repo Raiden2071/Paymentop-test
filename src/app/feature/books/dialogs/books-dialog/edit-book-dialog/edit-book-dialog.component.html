@@ -1,0 +1,44 @@
+<h2 mat-dialog-title class="edit-dialog-header">Edit Book Dialog</h2>
+
+<mat-dialog-content class="edit-dialog-content">
+  <div class="edit-dialog-image" (click)="onImageClick()">
+    @if (imagePreview() || data.book.image) {
+      <img [src]="imagePreview() || data.book.image" alt="edit-dialog-image">
+    }
+    @else {
+      <p class="card-photo-name" >NO IMAGE</p>
+    }
+  </div>
+    <form class="edit-dialog-form" [formGroup]="editBookForm">
+      <mat-form-field appearance="outline">
+        <mat-label>NAME</mat-label>
+        <input matInput placeholder="Enter the book name" formControlName="name" required/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>AUTHOR</mat-label>
+        <input matInput formControlName="author" placeholder="Enter the author name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>YEAR</mat-label>
+        <input matInput formControlName="year" type="number" placeholder="Enter publication year">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>DESCRIPTION</mat-label>
+        <textarea matInput formControlName="description" placeholder="Enter description"></textarea>
+      </mat-form-field>
+      <input type="file" #fileInput (change)="onFileChange($event)" />
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button color="primary" mat-dialog-close>
+    <mat-icon>favorite</mat-icon>
+    Close
+  </button>
+  <button mat-flat-button color="primary" cdkFocusInitial mat-dialog-close (click)="editBook()">
+    <mat-icon>favorite</mat-icon>
+    Edit
+  </button>
+</mat-dialog-actions>

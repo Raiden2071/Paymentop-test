@@ -1,4 +1,9 @@
-export type BooksDialogType = 'simple' | 'edit' | 'delete';
+export const BOOKS_DIALOG_TYPES = {
+  SHOW: 'SHOW',
+  EDIT: 'EDIT',
+  DELETE: 'DELETE',
+};
+export type BooksDialogType = typeof BOOKS_DIALOG_TYPES[keyof typeof BOOKS_DIALOG_TYPES];
 
 export interface Book extends BookForm {
     id: string;

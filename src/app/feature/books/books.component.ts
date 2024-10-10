@@ -2,27 +2,34 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  effect,
   inject,
   OnInit,
   signal,
   WritableSignal
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BooksService } from './services/books.service';
-import { Book, BooksDialogType } from './models/book.model';
+import { Book, BOOKS_DIALOG_TYPES, BooksDialogType } from './models/book.model';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { BooksDialogComponent } from './dialogs/books-dialog/books-dialog.component';
 import { NavbarComponent } from '@core/navbar/navbar.component';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { v4 as uuidv4 } from 'uuid';
 import { Observable } from 'rxjs';
+import {
+  ShowBookDialogComponent
+} from '@feature/books/dialogs/books-dialog/show-book-dialog/show-book-dialog.component';
+import {
+  EditBookDialogComponent
+} from '@feature/books/dialogs/books-dialog/edit-book-dialog/edit-book-dialog.component';
+import {
+  DeleteBookDialogComponent
+} from '@feature/books/dialogs/books-dialog/delete-book-dialog/delete-book-dialog.component';
 
 @Component({
   selector: 'app-books',
@@ -47,16 +54,17 @@ import { Observable } from 'rxjs';
 export class BooksComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private books$: Observable<Book[]> = toObservable(this.booksService.books);
+  protected readonly BOOKS_DIALOG_TYPES = BOOKS_DIALOG_TYPES;
 
   filteredBooks: WritableSignal<Book[]> = signal<Book[]>([]);
   searchText: FormControl<string> = this.fb.control('')
 
   readonly bookForm = this.fb.group({
     image: [''],
-    name: [{ value: '', disabled: false }, Validators.required],
-    author: [{ value: '', disabled: false }, Validators.required],
-    year: [{ value: '', disabled: false }, Validators.required],
-    description: [{ value: '', disabled: false }, Validators.required]
+    name: ['', Validators.required],
+    author: ['', Validators.required],
+    year: ['', Validators.required],
+    description: ['', Validators.required]
   });
 
   constructor(
@@ -71,16 +79,6 @@ export class BooksComponent implements OnInit {
     this.initFormListeners();
   }
 
-  public openDialog(book: Book, dialogType: BooksDialogType): void {
-    this.dialog.open(BooksDialogComponent, {
-      data: {
-        book,
-        dialogType,
-      },
-      width: '500px',
-    });
-  }
-
   public addBook(): void {
     if (this.bookForm.valid) {
       const newBook: Book = {
@@ -92,7 +90,6 @@ export class BooksComponent implements OnInit {
         image: this.bookForm.get('image')?.value || '',
       };
 
-      console.log('add book method', newBook);
       this.booksService.addBook(newBook);
       this.bookForm.reset();
     }
@@ -103,6 +100,22 @@ export class BooksComponent implements OnInit {
     if (file) {
       this.bookForm.patchValue({ image: file });
     }
+  }
+
+  public openDialog(book: Book, dialogType: BooksDialogType): void {
+    const dialogComponent = {
+      [BOOKS_DIALOG_TYPES.SHOW]: ShowBookDialogComponent,
+      [BOOKS_DIALOG_TYPES.EDIT]: EditBookDialogComponent,
+      [BOOKS_DIALOG_TYPES.DELETE]: DeleteBookDialogComponent,
+    }
+
+    this.dialog.open(dialogComponent[dialogType], {
+      data: {
+        book,
+        dialogType: dialogType,
+      },
+      width: '600px',
+    });
   }
 
   private initFormListeners(): void {
