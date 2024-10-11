@@ -57,7 +57,7 @@ export class BooksComponent implements OnInit {
   protected readonly BOOKS_DIALOG_TYPES = BOOKS_DIALOG_TYPES;
 
   filteredBooks: WritableSignal<Book[]> = signal<Book[]>([]);
-  searchText: FormControl<string> = this.fb.control('')
+  searchText: FormControl<string> = this.fb.control<string>('')
 
   readonly bookForm = this.fb.group({
     image: [''],
@@ -107,7 +107,7 @@ export class BooksComponent implements OnInit {
       [BOOKS_DIALOG_TYPES.SHOW]: ShowBookDialogComponent,
       [BOOKS_DIALOG_TYPES.EDIT]: EditBookDialogComponent,
       [BOOKS_DIALOG_TYPES.DELETE]: DeleteBookDialogComponent,
-    }
+    };
 
     this.dialog.open(dialogComponent[dialogType], {
       data: {

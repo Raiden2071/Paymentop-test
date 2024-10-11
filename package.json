@@ -5,7 +5,6 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:docs": "ng build --output-path docs --base-href .",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:paymentop-test": "node dist/paymentop-test/server/server.mjs"
